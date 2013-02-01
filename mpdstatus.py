@@ -10,7 +10,10 @@ class MpdStatusWidget(object):
 
     def output(self):
         song = self.client.currentsong()
-        return {
-            'full_text': ' {artist} - {title}'.format(**song),
-            'icon': 'mmbar/icons/note.xbm',
-        }
+        if song:
+            return {
+                'full_text': ' {artist} - {title}'.format(**song),
+                'icon': 'mmbar/icons/note.xbm',
+            }
+        else:
+            pass
