@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
+import urllib.error
 import urllib.request
 import metar
 
 
 class WeatherWidget(object):
+    full_text = ""
+
     def __init__(self, icao_code, interval=900):
         self.icao_code = icao_code
         self.interval = interval
@@ -15,15 +18,19 @@ class WeatherWidget(object):
                 self.last_run + datetime.timedelta(seconds=self.interval):
             uri = 'http://weather.noaa.gov/pub/data/observations/metar/stations/'\
                     '{0}.TXT'.format(self.icao_code)
-            r = urllib.request.urlopen(uri)
-            w = metar.parse(r.read().decode('utf-8'))
+            try:
+                r = urllib.request.urlopen(uri)
+                w = metar.parse(r.read().decode('utf-8'))
 
-            self.last_run = datetime.datetime.now()
-            self.full_text = ' {weather}, {temperature}°C'.format(
-                    weather=w.conditions or w.cover,
-                    temperature=w.temperature)
+                self.last_run = datetime.datetime.now()
+                self.full_text = ' {weather}, {temperature}°C'.format(
+                        weather=w.conditions or w.cover,
+                        temperature=w.temperature)
+            except urllib.error.URLError:
+                pass
 
-        return {
-            'full_text': self.full_text,
-            'icon': 'mmbar/icons/temp.xbm',
-        }
+        if len(self.full_text) > 0:
+            return {
+                'full_text': self.full_text,
+                'icon': 'mmbar/icons/temp.xbm',
+            }
