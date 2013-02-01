@@ -12,5 +12,5 @@ class MpdStatusWidget(object):
         song = self.client.currentsong()
         return {
             'full_text': ' {artist} - {title}'.format(**song),
-            'icon': '.config/dzen/icons/note.xbm',
+            'icon': 'mmbar/icons/note.xbm',
         }

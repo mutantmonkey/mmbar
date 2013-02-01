@@ -25,5 +25,5 @@ class WeatherWidget(object):
 
         return {
             'full_text': self.full_text,
-            'icon': '.config/dzen/icons/temp.xbm',
+            'icon': 'mmbar/icons/temp.xbm',
         }

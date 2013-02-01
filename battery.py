@@ -13,11 +13,11 @@ class BatteryWidget(object):
             return {
                 'full_text': ' ' + str(charge_percent) + '%',
                 'color': '#87af87',
-                'icon': '.config/dzen/icons/bat_full_01.xbm',
+                'icon': 'mmbar/icons/bat_full_01.xbm',
             }
         else:
             return {
                 'full_text': ' ' + str(charge_percent) + '%',
                 'color': '#a36666',
-                'icon': '.config/dzen/icons/bat_low_01.xbm',
+                'icon': 'mmbar/icons/bat_low_01.xbm',
             }

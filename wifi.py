@@ -15,7 +15,7 @@ class WifiWidget(object):
 
             return {
                 'full_text': ' ' + m.group(1),
-                'icon': '.config/dzen/icons/wifi_02.xbm',
+                'icon': 'mmbar/icons/wifi_02.xbm',
             }
         except subprocess.CalledProcessError:
             pass
