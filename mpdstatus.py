@@ -13,6 +13,7 @@ class MpdStatusWidget(object):
         if song:
             return {
                 'full_text': ' {artist} - {title}'.format(**song),
+                'color': '#8cd0d3',
                 'icon': 'mmbar/icons/note.xbm',
             }
         else:

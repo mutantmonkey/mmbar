@@ -8,7 +8,7 @@ import metar
 class WeatherWidget(object):
     full_text = ""
 
-    def __init__(self, icao_code, interval=900):
+    def __init__(self, icao_code, interval=300):
         self.icao_code = icao_code
         self.interval = interval
         self.last_run = None
@@ -32,5 +32,6 @@ class WeatherWidget(object):
         if len(self.full_text) > 0:
             return {
                 'full_text': self.full_text,
+                'color': '#c3bf9f',
                 'icon': 'mmbar/icons/temp.xbm',
             }
