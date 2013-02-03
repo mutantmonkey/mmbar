@@ -14,6 +14,8 @@ class WifiWidget(object):
                 interface=self.interface), out)
 
             return {
+                'name': "wifi",
+                'instance': self.interface,
                 'full_text': ' ' + m.group(1),
                 'icon': 'mmbar/icons/wifi_02.xbm',
             }

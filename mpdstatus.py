@@ -12,6 +12,8 @@ class MpdStatusWidget(object):
         song = self.client.currentsong()
         if song:
             return {
+                'name': "mpdstatus",
+                'instance': self.server,
                 'full_text': ' {artist} - {title}'.format(**song),
                 'color': '#8cd0d3',
                 'icon': 'mmbar/icons/note.xbm',
