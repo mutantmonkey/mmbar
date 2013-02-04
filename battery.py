@@ -13,7 +13,7 @@ class BatteryWidget(object):
             return {
                 'name': "battery",
                 'full_text': ' ' + str(charge_percent) + '%',
-                'color': '#87af87',
+                'color': '#7f9f7f',
                 'icon': 'mmbar/icons/bat_full_01.xbm',
             }
         else:
@@ -21,6 +21,6 @@ class BatteryWidget(object):
                 'name': "battery",
                 'instance': self.device,
                 'full_text': ' ' + str(charge_percent) + '%',
-                'color': '#a36666',
+                'color': '#e37170',
                 'icon': 'mmbar/icons/bat_low_01.xbm',
             }
