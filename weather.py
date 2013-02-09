@@ -26,7 +26,7 @@ class WeatherWidget(object):
                 self.full_text = ' {weather}, {temperature}°C'.format(
                         weather=w.conditions or w.cover,
                         temperature=w.temperature)
-            except urllib.error.URLError:
+            except:
                 pass
 
         if len(self.full_text) > 0:
