@@ -25,11 +25,11 @@ widgets = [
 ]
 
 
-prnt(json.dumps({'version': 1}) + '[[]')
+print(json.dumps({'version': 1}) + '[[]')
 while True:
     output = []
     for widget in widgets:
         output.append(widget.output())
     print(',' + json.dumps(output), flush=True)
     time.sleep(RUN_INTERVAL)
-prnt(']')
+print(']')
