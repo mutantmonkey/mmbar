@@ -1,4 +1,5 @@
 import mpd
+import os.path
 
 
 class MpdStatusWidget(object):
@@ -9,12 +10,21 @@ class MpdStatusWidget(object):
         self.client.connect(server, 6600)
 
     def output(self):
-        song = self.client.currentsong()
+        try:
+            song = self.client.currentsong()
+        except:
+            pass
+
         if song:
+            if 'artist' in song and 'title' in song:
+                text = "{artist} - {title}".format(**song)
+            else:
+                text = os.path.basename(song['file'])
+
             return {
                 'name': "mpdstatus",
                 'instance': self.server,
-                'full_text': ' {artist} - {title}'.format(**song),
+                'full_text': ' ' + text,
                 'color': '#8cd0d3',
                 'icon': 'mmbar/icons/note.xbm',
             }
