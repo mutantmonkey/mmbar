@@ -5,15 +5,39 @@ import os.path
 class MpdStatusWidget(object):
     def __init__(self, server, timeout=10):
         self.server = server
-        self.client = mpd.MPDClient()
-        self.client.timeout = timeout
-        self.client.connect(server, 6600)
+        self.timeout = timeout
+
+        self._client = mpd.MPDClient()
+        self._client.timeout = self.timeout
+        self.connect()
+
+    def connect(self):
+        self._client.connect(self.server, 6600)
+
+    def disconnect(self):
+        # we can safely ignore errors if this fails
+        try:
+            self._client.close()
+        except (mpd.MPDError, IOError):
+            pass
+
+        try:
+            self._client.disconnect()
+        except:
+            self._client = mpd.MPDClient()
+            self._client.timeout = self.timeout
 
     def output(self):
         try:
-            song = self.client.currentsong()
-        except:
-            pass
+            song = self._client.currentsong()
+        except (mpd.MPDError, mpd.ConnectionError, IOError):
+            # attempt to reconnect and fetch song title again
+            try:
+                self.disconnect()
+                self.connect()
+                song = self._client.currentsong()
+            except (mpd.MPDError, mpd.ConnectionError, IOError):
+                return
 
         if song:
             if 'artist' in song and 'title' in song:
@@ -29,4 +53,4 @@ class MpdStatusWidget(object):
                 'icon': 'mmbar/icons/note.xbm',
             }
         else:
-            pass
+            return
