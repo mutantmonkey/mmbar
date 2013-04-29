@@ -5,24 +5,35 @@
 # author: mutantmonkey <mutantmonkey@mutantmonkey.in>
 ################################################################################
 
+import importlib
 import json
 import sys
 import time
+import widgets
+import yaml
 
-from battery import *
-from clock import *
-from mpdstatus import *
-from weather import *
-from wifi import *
+try:
+    import xdg.BaseDirectory
+    configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
+except:
+    import os.path
+    configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
-RUN_INTERVAL = 2
-widgets = [
-    WifiWidget('wlan0'),
-    BatteryWidget('CMB1'),
-    #MpdStatusWidget('gigantea.mutantmonkey.in'),
-    WeatherWidget('KBCB'),
-    ClockWidget(),
-]
+config = yaml.safe_load(open(configpath))
+interval = config['interval']
+widgets = []
+
+# load widgets from config
+for args in config['widgets']:
+    args = args.split(' ')
+
+    components = args[0].split('.')
+    path = '.'.join(components[:-1])
+    module = importlib.import_module(path)
+
+    class_ = getattr(module, components[-1])
+    instance = class_(*args[1:])
+    widgets.append(instance)
 
 
 print(json.dumps({'version': 1}) + '[[]')
@@ -31,5 +42,5 @@ while True:
     for widget in widgets:
         output.append(widget.output())
     print(',' + json.dumps(output), flush=True)
-    time.sleep(RUN_INTERVAL)
+    time.sleep(interval)
 print(']')

@@ -1,0 +1,7 @@
+interval: 2
+widgets:
+#- widgets.wifi.WifiWidget wlan0
+#- widgets.battery.BatteryWidget CMB1
+- widgets.mpdstatus.MpdStatusWidget gigantea.mutantmonkey.in
+- widgets.weather.WeatherWidget KBCB
+- widgets.clock.ClockWidget
