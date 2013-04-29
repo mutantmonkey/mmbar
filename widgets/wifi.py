@@ -10,9 +10,13 @@ class WifiWidget(object):
         try:
             out = subprocess.check_output(['iwgetid'])
             out = out.decode('utf-8')
-            m = re.match(r'{interface}\s+ESSID:"(.+?)"\n'.format(
-                interface=self.interface), out)
+        except subprocess.CalledProcessError:
+            return
 
+        m = re.match(r'{interface}\s+ESSID:"(.+?)"\n'.format(
+            interface=self.interface), out)
+
+        if m:
             return {
                 'name': "wifi",
                 'instance': self.interface,
@@ -20,5 +24,5 @@ class WifiWidget(object):
                 'color': '#dfaf8f',
                 'icon': 'mmbar/icons/wifi_02.xbm',
             }
-        except subprocess.CalledProcessError:
-            pass
+        else:
+            return
