@@ -36,7 +36,7 @@ class MpdStatusWidget(object):
                 self.disconnect()
                 self.connect()
                 song = self._client.currentsong()
-            except (mpd.MPDError, mpd.ConnectionError, IOError):
+            except (mpd.MPDError, mpd.ConnectionError, IOError, OSError):
                 return
 
         if song:
