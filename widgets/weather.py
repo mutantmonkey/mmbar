@@ -34,5 +34,5 @@ class WeatherWidget(object):
                 'name': "weather",
                 'full_text': self.full_text,
                 'color': '#c3bf9f',
-                'icon': 'mmbar/icons/temp.xbm',
+                'icon': 'temp.xbm',
             }

@@ -50,7 +50,7 @@ class MpdStatusWidget(object):
                 'instance': self.server,
                 'full_text': ' ' + text,
                 'color': '#8cd0d3',
-                'icon': 'mmbar/icons/note.xbm',
+                'icon': 'note.xbm',
             }
         else:
             return

@@ -7,5 +7,5 @@ class ClockWidget(object):
             'name': "clock",
             'full_text': datetime.datetime.now().strftime(" %a %b %d %H:%M"),
             'short_text': datetime.datetime.now().strftime(" %H:%M"),
-            'icon': 'mmbar/icons/clock.xbm',
+            'icon': 'clock.xbm',
         }

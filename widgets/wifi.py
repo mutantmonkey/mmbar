@@ -22,7 +22,7 @@ class WifiWidget(object):
                 'instance': self.interface,
                 'full_text': ' ' + m.group(1),
                 'color': '#dfaf8f',
-                'icon': 'mmbar/icons/wifi_02.xbm',
+                'icon': 'wifi_02.xbm',
             }
         else:
             return

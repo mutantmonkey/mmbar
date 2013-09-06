@@ -1,12 +1,13 @@
 #!/usr/bin/python3
-################################################################################
+###############################################################################
 # status.py - python i3bar status line generator
 #
 # author: mutantmonkey <mutantmonkey@mutantmonkey.in>
-################################################################################
+###############################################################################
 
 import importlib
 import json
+import os.path
 import sys
 import time
 import widgets
@@ -21,6 +22,7 @@ except:
 
 config = yaml.safe_load(open(configpath))
 interval = config['interval']
+icon_path = os.path.dirname(os.path.abspath(__file__))
 widgets = []
 
 # load widgets from config
@@ -40,7 +42,9 @@ print(json.dumps({'version': 1}) + '[[]')
 while True:
     output = []
     for widget in widgets:
-        output.append(widget.output())
+        wout = widget.output()
+        wout['icon'] = os.path.join(icon_path, 'icons', wout['icon'])
+        output.append(wout)
     print(',' + json.dumps(output), flush=True)
     time.sleep(interval)
 print(']')
