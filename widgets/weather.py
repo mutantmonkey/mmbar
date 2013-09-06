@@ -7,6 +7,8 @@ import metar
 
 class WeatherWidget(object):
     full_text = ""
+    uri = "http://weather.noaa.gov/pub/data/observations/metar/stations/"\
+          "{icao}.TXT"
 
     def __init__(self, icao_code, interval=300):
         self.icao_code = icao_code
@@ -16,16 +18,15 @@ class WeatherWidget(object):
     def output(self):
         if not self.last_run or datetime.datetime.now() >= \
                 self.last_run + datetime.timedelta(seconds=self.interval):
-            uri = 'http://weather.noaa.gov/pub/data/observations/metar/stations/'\
-                    '{0}.TXT'.format(self.icao_code)
+            uri = self.uri.format(icao=self.icao_code)
             try:
                 r = urllib.request.urlopen(uri)
                 w = metar.parse(r.read().decode('utf-8'))
 
                 self.last_run = datetime.datetime.now()
                 self.full_text = ' {weather}, {temperature}°C'.format(
-                        weather=w.conditions or w.cover or "fair",
-                        temperature=w.temperature)
+                    weather=w.conditions or w.cover or "fair",
+                    temperature=w.temperature)
             except:
                 pass
 

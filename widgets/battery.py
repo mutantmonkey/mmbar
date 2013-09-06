@@ -3,10 +3,10 @@ class BatteryWidget(object):
         self.device = device
 
     def output(self):
-        charge_now = int(open('/sys/class/power_supply/{dev}/charge_now'.\
-                format(dev=self.device)).read())
-        charge_full = int(open('/sys/class/power_supply/{dev}/charge_full'.\
-                format(dev=self.device)).read())
+        charge_now = int(open('/sys/class/power_supply/{dev}/charge_now'.
+                              format(dev=self.device)).read())
+        charge_full = int(open('/sys/class/power_supply/{dev}/charge_full'.
+                               format(dev=self.device)).read())
         charge_percent = int(charge_now / charge_full * 100)
 
         if charge_percent > 15:
