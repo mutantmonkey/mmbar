@@ -17,7 +17,6 @@ try:
     import xdg.BaseDirectory
     configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
 except:
-    import os.path
     configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
 config = yaml.safe_load(open(configpath))
