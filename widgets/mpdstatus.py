@@ -50,7 +50,7 @@ class MpdStatusWidget(object):
             return {
                 'name': "mpdstatus",
                 'instance': self.server,
-                'full_text': ' ' + text[100:],
+                'full_text': ' ' + text[:100],
                 'color': '#8cd0d3',
                 'icon': 'note.xbm',
             }
