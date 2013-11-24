@@ -28,7 +28,7 @@ class ForecastWidget(object):
                 w = json.loads(r.text)
 
                 self.last_run = datetime.datetime.now()
-                self.full_text = ' {weather}, {temperature}°C'.format(
+                self.full_text = '{weather}, {temperature}°C'.format(
                     weather=w['currently']['summary'],
                     temperature=round(w['currently']['temperature']))
             except:

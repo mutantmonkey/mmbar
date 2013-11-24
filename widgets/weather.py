@@ -24,7 +24,7 @@ class WeatherWidget(object):
                 w = metar.parse(r.read().decode('utf-8'))
 
                 self.last_run = datetime.datetime.now()
-                self.full_text = ' {weather}, {temperature}°C'.format(
+                self.full_text = '{weather}, {temperature}°C'.format(
                     weather=w.conditions or w.cover or "fair",
                     temperature=w.temperature)
             except:

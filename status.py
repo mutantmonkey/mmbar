@@ -42,8 +42,10 @@ while True:
     output = []
     for widget in widgets:
         wout = widget.output()
+
         if wout is not None:
             wout['icon'] = os.path.join(icon_path, 'icons', wout['icon'])
+            wout['full_text'] = ' {}'.format(wout['full_text'])
             output.append(wout)
     print(',' + json.dumps(output), flush=True)
     time.sleep(interval)

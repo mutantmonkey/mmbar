@@ -12,7 +12,7 @@ class BatteryWidget(object):
         if charge_percent > 15:
             return {
                 'name': "battery",
-                'full_text': ' ' + str(charge_percent) + '%',
+                'full_text': str(charge_percent) + '%',
                 'color': '#7f9f7f',
                 'icon': 'bat_full_01.xbm',
             }
@@ -20,7 +20,7 @@ class BatteryWidget(object):
             return {
                 'name': "battery",
                 'instance': self.device,
-                'full_text': ' ' + str(charge_percent) + '%',
+                'full_text': str(charge_percent) + '%',
                 'color': '#e37170',
                 'icon': 'bat_low_01.xbm',
             }
