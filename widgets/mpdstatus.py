@@ -9,10 +9,11 @@ class MpdStatusWidget(object):
 
         self._client = mpd.MPDClient()
         self._client.timeout = self.timeout
-        self.connect()
+        self.connected = False
 
     def connect(self):
         self._client.connect(self.server, 6600)
+        self.connected = True
 
     def disconnect(self):
         # we can safely ignore errors if this fails
@@ -27,17 +28,26 @@ class MpdStatusWidget(object):
             self._client = mpd.MPDClient()
             self._client.timeout = self.timeout
 
+        self.connected = False
+
     def output(self):
+        if not self.connected:
+            try:
+                self.connect()
+            except Exception as e:
+                return {
+                    'name': "mpdstatus",
+                    'instance': self.server,
+                    'full_text': str(e),
+                    'color': '#8cd0d3',
+                    'icon': 'note.xbm',
+                }
+
         try:
             song = self._client.currentsong()
         except (mpd.MPDError, mpd.ConnectionError, IOError):
-            # attempt to reconnect and fetch song title again
-            try:
-                self.disconnect()
-                self.connect()
-                song = self._client.currentsong()
-            except (mpd.MPDError, mpd.ConnectionError, IOError, OSError):
-                return
+            # disconnect, will attempt again on next refresh
+            self.disconnect()
 
         if song:
             if 'artist' in song and 'title' in song:
