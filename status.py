@@ -25,17 +25,37 @@ icon_path = os.path.dirname(os.path.abspath(__file__))
 widgets = []
 
 # load widgets from config
-for args in config['widgets']:
-    args = args.split(' ')
+for item in config['widgets']:
+    if isinstance(item, dict):
+        # grab the first dict from the list of widgets
+        components, args = item.popitem()
+    else:
+        # if the item is not a dict, then it is a widget with no args
+        # for backwards compatibility, we split on spaces
+        splat = item.split(' ')
+        components = splat[0]
+        if len(splat) > 1:
+            args = splat[1:]
+        else:
+            args = []
 
-    components = args[0].split('.')
+    components = components.split('.')
     path = '.'.join(components[:-1])
     module = importlib.import_module(path)
 
     class_ = getattr(module, components[-1])
-    instance = class_(*args[1:])
-    widgets.append(instance)
 
+    if isinstance(args, dict):
+        # keyword arguments
+        instance = class_(**args)
+    elif isinstance(args, list):
+        # positional arguments
+        instance = class_(*args)
+    else:
+        # single argument
+        instance = class_(args)
+
+    widgets.append(instance)
 
 print(json.dumps({'version': 1}) + '[[]')
 while True:
