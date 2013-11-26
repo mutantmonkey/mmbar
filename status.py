@@ -13,11 +13,14 @@ import time
 import widgets
 import yaml
 
-try:
-    import xdg.BaseDirectory
-    configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
-except:
-    configpath = os.path.expanduser('~/.config/mmbar/config.yml')
+if len(sys.argv) > 1:
+    configpath = sys.argv[1]
+else:
+    try:
+        import xdg.BaseDirectory
+        configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
+    except:
+        configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
 config = yaml.safe_load(open(configpath))
 interval = config['interval']
