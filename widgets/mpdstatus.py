@@ -3,7 +3,7 @@ import os.path
 
 
 class MpdStatusWidget(object):
-    def __init__(self, server='localhost', port=6600, password='', timeout=10):
+    def __init__(self, server='localhost', port=6600, password=None, timeout=10):
         self.server = server
         self.port = port
         self.password = password
@@ -15,7 +15,8 @@ class MpdStatusWidget(object):
 
     def connect(self):
         self._client.connect(self.server, self.port)
-        self._client.password(self.password)
+        if self.password:
+            self._client.password(self.password)
         self.connected = True
 
     def disconnect(self):
