@@ -3,7 +3,8 @@ import os.path
 
 
 class MpdStatusWidget(object):
-    def __init__(self, server='localhost', port=6600, password=None, timeout=10):
+    def __init__(self, server='localhost', port=6600, password=None,
+                 timeout=10):
         self.server = server
         self.port = port
         self.password = password

@@ -1,7 +1,8 @@
 import os
 
+
 class BatteryWidget(object):
-    def __init__(self, device='BAT0', color_full='#7f9f7f', 
+    def __init__(self, device='BAT0', color_full='#7f9f7f',
                  color_low='#e37170'):
         self.device = device
         self.color_full = color_full
@@ -11,9 +12,9 @@ class BatteryWidget(object):
         if os.path.exists('/sys/class/power_supply/{dev}/energy_now'.
                           format(dev=self.device)):
             charge_now = int(open('/sys/class/power_supply/{dev}/energy_now'.
-                                  format(dev=self.device)).read()) 
+                                  format(dev=self.device)).read())
             charge_full = int(open('/sys/class/power_supply/{dev}/energy_full'.
-                                   format(dev=self.device)).read()) 
+                                   format(dev=self.device)).read())
         else:
             charge_now = int(open('/sys/class/power_supply/{dev}/charge_now'.
                                   format(dev=self.device)).read())
