@@ -53,6 +53,7 @@ class MpdStatusWidget(object):
         except (mpd.MPDError, mpd.ConnectionError, IOError):
             # disconnect, will attempt again on next refresh
             self.disconnect()
+            song = None
 
         if song:
             if 'artist' in song and 'title' in song:
