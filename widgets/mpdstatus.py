@@ -44,8 +44,7 @@ class MpdStatusWidget(object):
                     'name': "mpdstatus",
                     'instance': self.server,
                     'full_text': str(e),
-                    'color': '#8cd0d3',
-                    'icon': 'note.xbm',
+                    '_status': 'error',
                 }
 
         try:
@@ -67,6 +66,5 @@ class MpdStatusWidget(object):
                 'name': "mpdstatus",
                 'instance': self.server,
                 'full_text': text[:100],
-                'color': '#8cd0d3',
-                'icon': 'note.xbm',
+                '_status': 'normal',
             }

@@ -7,9 +7,8 @@ class Coinbase(object):
     full_text = ""
     uri = "https://coinbase.com/api/v1/currencies/exchange_rates"
 
-    def __init__(self, currency, color='#eaf514', interval=60):
+    def __init__(self, currency, interval=60):
         self.currency = currency
-        self.color = color
         self.interval = interval
         self.last_run = None
 
@@ -21,7 +20,8 @@ class Coinbase(object):
                 w = json.loads(r.text)
 
                 self.last_run = datetime.datetime.now()
-                self.full_text = '${amount:.2f}'.format(amount=float(w[self.currency]))
+                self.full_text = '${amount:.2f}'.format(
+                    amount=float(w[self.currency]))
             except:
                 pass
 
@@ -29,6 +29,4 @@ class Coinbase(object):
             return {
                 'name': "coinbase",
                 'full_text': self.full_text,
-                'color': self.color,
-                'icon': 'text.xbm',
             }

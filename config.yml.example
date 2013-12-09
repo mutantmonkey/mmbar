@@ -1,7 +1,34 @@
 interval: 2
+
 widgets:
 #- widgets.wifi.WifiWidget: wlan0
 #- widgets.battery.BatteryWidget: CMB1
 - widgets.mpdstatus.MpdStatusWidget: gigantea.mutantmonkey.in
 - widgets.weather.WeatherWidget: KSAN
+#- widgets.forecast.ForecastWidget:
+#    api_key:
+#    lat:
+#    lon:
 - widgets.clock.ClockWidget
+
+theme:
+  battery:
+    color: "#7f9f7f #e37170"
+    icon: U+f0e4
+  coinbase:
+    color: "#f0dfaf"
+    icon: U+f15a
+  clock:
+    icon: U+f017
+  forecast:
+    color: "#c3bf9f"
+    icon: U+f041
+  mpdstatus:
+    color: "#8cd0d3"
+    icon: U+f025
+  weather:
+    color: "#c3bf9f"
+    icon: U+f041
+  wifi:
+    color: "#dfaf8f"
+    icon: U+f012

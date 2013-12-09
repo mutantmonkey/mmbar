@@ -2,11 +2,8 @@ import os
 
 
 class BatteryWidget(object):
-    def __init__(self, device='BAT0', color_full='#7f9f7f',
-                 color_low='#e37170'):
+    def __init__(self, device='BAT0'):
         self.device = device
-        self.color_full = color_full
-        self.color_low = color_low
 
     def output(self):
         if os.path.exists('/sys/class/power_supply/{dev}/energy_now'.
@@ -25,15 +22,14 @@ class BatteryWidget(object):
         if charge_percent > 15:
             return {
                 'name': "battery",
+                'instance': self.device,
                 'full_text': str(charge_percent) + '%',
-                'color': self.color_full,
-                'icon': 'bat_full_01.xbm',
+                '_status': 'normal',
             }
         else:
             return {
                 'name': "battery",
                 'instance': self.device,
                 'full_text': str(charge_percent) + '%',
-                'color': self.color_low,
-                'icon': 'bat_low_01.xbm',
+                '_status': 'warn',
             }

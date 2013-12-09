@@ -21,6 +21,4 @@ class WifiWidget(object):
                 'name': "wifi",
                 'instance': self.interface,
                 'full_text': m.group(1),
-                'color': '#dfaf8f',
-                'icon': 'wifi_02.xbm',
             }

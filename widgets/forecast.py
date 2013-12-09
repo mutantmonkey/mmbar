@@ -38,6 +38,4 @@ class ForecastWidget(object):
             return {
                 'name': "forecast",
                 'full_text': self.full_text,
-                'color': '#c3bf9f',
-                'icon': 'temp.xbm',
             }
