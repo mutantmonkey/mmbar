@@ -57,6 +57,8 @@ class MpdStatusWidget(object):
         if song:
             if 'artist' in song and 'title' in song:
                 text = "{artist} - {title}".format(**song)
+            elif 'title' in song:
+                text = song['title']
             elif 'name' in song:
                 text = song['name']
             else:
