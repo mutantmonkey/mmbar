@@ -1,32 +1,24 @@
-import datetime
 import requests
 import json
+from widgets import base
 
 
-class Coinbase(object):
-    full_text = ""
+class Coinbase(base.IntervalWidget):
     uri = "https://coinbase.com/api/v1/currencies/exchange_rates"
 
     def __init__(self, currency, interval=60):
         self.currency = currency
-        self.interval = interval
-        self.last_run = None
+        super().__init__(interval)
 
-    def output(self):
-        if not self.last_run or datetime.datetime.now() >= \
-                self.last_run + datetime.timedelta(seconds=self.interval):
-            try:
-                r = requests.get(self.uri)
-                w = json.loads(r.text)
+    def get_output(self):
+        try:
+            r = requests.get(self.uri)
+            w = json.loads(r.text)
 
-                self.last_run = datetime.datetime.now()
-                self.full_text = '${amount:.2f}'.format(
-                    amount=float(w[self.currency]))
-            except:
-                pass
-
-        if len(self.full_text) > 0:
+            text = '${amount:.2f}'.format(amount=float(w[self.currency]))
             return {
                 'name': "coinbase",
-                'full_text': self.full_text,
+                'full_text': text,
             }
+        except:
+            pass

@@ -1,37 +1,31 @@
 # -*- coding: utf-8 -*-
-import datetime
 import urllib.error
 import urllib.request
 import metar
+from widgets import base
 
 
-class WeatherWidget(object):
-    full_text = ""
+class WeatherWidget(base.IntervalWidget):
     uri = "http://weather.noaa.gov/pub/data/observations/metar/stations/"\
           "{icao}.TXT"
 
     def __init__(self, icao_code, interval=300):
         self.icao_code = icao_code
-        self.interval = interval
-        self.last_run = None
+        super().__init__(interval)
 
-    def output(self):
-        if not self.last_run or datetime.datetime.now() >= \
-                self.last_run + datetime.timedelta(seconds=self.interval):
-            uri = self.uri.format(icao=self.icao_code)
-            try:
-                r = urllib.request.urlopen(uri)
-                w = metar.parse(r.read().decode('utf-8'))
+    def get_output(self):
+        uri = self.uri.format(icao=self.icao_code)
+        try:
+            r = urllib.request.urlopen(uri)
+            w = metar.parse(r.read().decode('utf-8'))
+            text = '{weather}, {temperature}°C'.format(
+                weather=w.conditions or w.cover or "fair",
+                temperature=w.temperature)
 
-                self.last_run = datetime.datetime.now()
-                self.full_text = '{weather}, {temperature}°C'.format(
-                    weather=w.conditions or w.cover or "fair",
-                    temperature=w.temperature)
-            except:
-                pass
-
-        if len(self.full_text) > 0:
             return {
                 'name': "weather",
-                'full_text': self.full_text,
+                'instance': self.icao_code,
+                'full_text': text,
             }
+        except:
+            pass

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-import datetime
 import requests
 import json
+from widgets import base
 
 
-class ForecastWidget(object):
-    full_text = ""
+class ForecastWidget(base.IntervalWidget):
     uri = "https://api.forecast.io/forecast/{api_key}/{lat},{lon}?units=si&"\
           "exclude=minutely,hourly,daily"
 
@@ -13,29 +12,24 @@ class ForecastWidget(object):
         self.api_key = api_key
         self.lat = lat
         self.lon = lon
-        self.interval = interval
-        self.last_run = None
+        super().__init__(interval)
 
-    def output(self):
-        if not self.last_run or datetime.datetime.now() >= \
-                self.last_run + datetime.timedelta(seconds=self.interval):
-            uri = self.uri.format(
-                api_key=self.api_key,
-                lat=self.lat,
-                lon=self.lon)
-            try:
-                r = requests.get(uri, verify=True)
-                w = json.loads(r.text)
+    def get_output(self):
+        uri = self.uri.format(
+            api_key=self.api_key,
+            lat=self.lat,
+            lon=self.lon)
+        try:
+            r = requests.get(uri, verify=True)
+            w = json.loads(r.text)
+            text = '{weather}, {temperature}°C'.format(
+                weather=w['currently']['summary'],
+                temperature=round(w['currently']['temperature']))
 
-                self.last_run = datetime.datetime.now()
-                self.full_text = '{weather}, {temperature}°C'.format(
-                    weather=w['currently']['summary'],
-                    temperature=round(w['currently']['temperature']))
-            except:
-                pass
-
-        if len(self.full_text) > 0:
             return {
                 'name': "forecast",
-                'full_text': self.full_text,
+                'instance': "{lat} {lon}".format(lat=self.lat, lon=self.lon),
+                'full_text': text,
             }
+        except:
+            pass
