@@ -13,7 +13,7 @@ widgets:
 
 theme:
   battery:
-    color: "#7f9f7f #e37170"
+    color: "#7f9f7f #e37170 #e37170"
     icon: U+f0e4
   coinbase:
     color: "#f0dfaf"
