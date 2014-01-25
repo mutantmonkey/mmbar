@@ -8,60 +8,82 @@
 import importlib
 import json
 import os.path
+import subprocess
 import sys
 import time
 import widgets
 import yaml
 
-if len(sys.argv) > 1:
-    configpath = sys.argv[1]
-else:
-    try:
-        import xdg.BaseDirectory
-        configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
-    except:
-        configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
-config = yaml.safe_load(open(configpath))
-interval = config['interval']
-icon_path = os.path.dirname(os.path.abspath(__file__))
-widgets = []
+def load_config(configpath):
+    config = yaml.safe_load(open(configpath))
 
-# load widgets from config
-for item in config['widgets']:
-    if isinstance(item, dict):
-        # grab the first dict from the list of widgets
-        components, args = item.popitem()
+    if 'interval' in config:
+        config['interval'] = int(config['interval'])
     else:
-        # if the item is not a dict, then it is a widget with no args
-        # for backwards compatibility, we split on spaces
-        splat = item.split(' ')
-        components = splat[0]
-        if len(splat) > 1:
-            args = splat[1:]
+        config['interval'] = 2
+
+    if 'netctl_check_interval' in config:
+        config['netctl_check_interval'] = int(config['netctl_check_interval'])
+    else:
+        config['netctl_check_interval'] = 30
+
+    return config
+
+
+def get_widgets(config):
+    if 'widgets_netctl' in config:
+        profile = None
+        out = subprocess.check_output(['netctl', 'list']).decode('utf-8')
+        for line in out.splitlines():
+            if line[0:2] == '* ':
+                profile = line[2:]
+                break
+
+        if profile in config['widgets_netctl']:
+            return load_widgets(config['widgets_netctl'][profile])
+
+    return load_widgets(config['widgets'])
+
+
+def load_widgets(cwidgets):
+    widgets = []
+    for item in cwidgets:
+        if isinstance(item, dict):
+            # grab the first dict from the list of widgets
+            components, args = item.copy().popitem()
         else:
-            args = []
+            # if the item is not a dict, then it is a widget with no args
+            # for backwards compatibility, we split on spaces
+            splat = item.split(' ')
+            components = splat[0]
+            if len(splat) > 1:
+                args = splat[1:]
+            else:
+                args = []
 
-    components = components.split('.')
-    path = '.'.join(components[:-1])
-    module = importlib.import_module(path)
+        components = components.split('.')
+        path = '.'.join(components[:-1])
+        module = importlib.import_module(path)
 
-    class_ = getattr(module, components[-1])
+        class_ = getattr(module, components[-1])
 
-    if isinstance(args, dict):
-        # keyword arguments
-        instance = class_(**args)
-    elif isinstance(args, list):
-        # positional arguments
-        instance = class_(*args)
-    else:
-        # single argument
-        instance = class_(args)
+        if isinstance(args, dict):
+            # keyword arguments
+            instance = class_(**args)
+        elif isinstance(args, list):
+            # positional arguments
+            instance = class_(*args)
+        else:
+            # single argument
+            instance = class_(args)
 
-    widgets.append(instance)
+        widgets.append(instance)
+
+    return widgets
 
 
-def theme_widget(wout):
+def theme_widget(wout, iconpath):
     widget_cfg = config['theme'][wout['name']]
 
     wout['icon'] = ""
@@ -81,7 +103,7 @@ def theme_widget(wout):
             icon = chr(int(icon[2:], 16))
             wout['full_text'] = icon + '  ' + wout['full_text']
         else:
-            wout['icon'] = os.path.join(icon_path, 'icons', icon)
+            wout['icon'] = os.path.join(iconpath, 'icons', icon)
             wout['full_text'] = ' ' + wout['full_text']
 
     if 'color' in widget_cfg:
@@ -99,16 +121,37 @@ def theme_widget(wout):
     return wout
 
 
-print(json.dumps({'version': 1}) + '[[]')
-while True:
-    output = []
-    for widget in widgets:
-        wout = widget.output()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        configpath = sys.argv[1]
+    else:
+        try:
+            import xdg.BaseDirectory
+            configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
+        except:
+            configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
-        if wout is not None:
-            if wout['name'] in config['theme']:
-                wout = theme_widget(wout)
-            output.append(wout)
-    print(',' + json.dumps(output), flush=True)
-    time.sleep(interval)
-print(']')
+    iconpath = os.path.dirname(os.path.abspath(__file__))
+    config = load_config(configpath)
+    widgets = get_widgets(config)
+    i = 0
+
+    print(json.dumps({'version': 1}) + '[[]')
+    while True:
+        if i >= config['netctl_check_interval']:
+            widgets = get_widgets(config)
+            i = 0
+
+        output = []
+        for widget in widgets:
+            wout = widget.output()
+
+            if wout is not None:
+                if wout['name'] in config['theme']:
+                    wout = theme_widget(wout, iconpath)
+                output.append(wout)
+        print(',' + json.dumps(output), flush=True)
+
+        i += config['interval']
+        time.sleep(config['interval'])
+    print(']')
