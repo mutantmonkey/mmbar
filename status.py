@@ -31,18 +31,19 @@ def load_config(configpath):
     return config
 
 
-def get_widgets(config):
+def active_profile(config):
     if 'widgets_netctl' in config:
-        profile = None
         out = subprocess.check_output(['netctl', 'list']).decode('utf-8')
         for line in out.splitlines():
             if line[0:2] == '* ':
-                profile = line[2:]
-                break
+                return line[2:]
+    return None
 
+
+def get_widgets(config, profile):
+    if 'widgets_netctl' in config:
         if profile in config['widgets_netctl']:
             return load_widgets(config['widgets_netctl'][profile])
-
     return load_widgets(config['widgets'])
 
 
@@ -127,20 +128,24 @@ if __name__ == '__main__':
     else:
         try:
             import xdg.BaseDirectory
-            configpath = xdg.BaseDirectory.load_first_config('mmbar/config.yml')
+            configpath = xdg.BaseDirectory.load_first_config(
+                'mmbar/config.yml')
         except:
             configpath = os.path.expanduser('~/.config/mmbar/config.yml')
 
     iconpath = os.path.dirname(os.path.abspath(__file__))
     config = load_config(configpath)
-    widgets = get_widgets(config)
+    profile = active_profile(config)
+    widgets = get_widgets(config, profile)
     i = 0
 
     print(json.dumps({'version': 1}) + '[[]')
     while True:
         if i >= config['netctl_check_interval']:
-            widgets = get_widgets(config)
             i = 0
+            if active_profile(config) != profile:
+                profile = active_profile(config)
+                widgets = get_widgets(config, profile)
 
         output = []
         for widget in widgets:
