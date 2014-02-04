@@ -1,7 +1,8 @@
 import os
+from widgets import base
 
 
-class BatteryWidget(object):
+class BatteryWidget(base.Widget):
     def __init__(self, device='BAT0'):
         self.device = device
 

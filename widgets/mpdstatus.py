@@ -1,8 +1,9 @@
 import mpd
 import os.path
+from widgets import base
 
 
-class MpdStatusWidget(object):
+class MpdStatusWidget(base.Widget):
     def __init__(self, server='localhost', port=6600, password=None,
                  timeout=10):
         self.server = server

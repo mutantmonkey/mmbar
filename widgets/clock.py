@@ -1,7 +1,8 @@
 import datetime
+from widgets import base
 
 
-class ClockWidget(object):
+class ClockWidget(base.Widget):
     def output(self):
         return {
             'name': "clock",

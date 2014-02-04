@@ -2,9 +2,10 @@ import array
 import fcntl
 import socket
 import struct
+from widgets import base
 
 
-class WifiWidget(object):
+class WifiWidget(base.Widget):
     INTERFACE_MAXLEN = 16
 
     # these values come from linux/wireless.h (V22)
