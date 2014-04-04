@@ -79,6 +79,7 @@ def load_widgets(cwidgets):
             # single argument
             instance = class_(args)
 
+        instance.start()
         widgets.append(instance)
 
     return widgets

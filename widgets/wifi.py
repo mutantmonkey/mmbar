@@ -2,6 +2,7 @@ import array
 import fcntl
 import socket
 import struct
+import time
 from widgets import base
 
 
@@ -12,8 +13,10 @@ class WifiWidget(base.Widget):
     ESSID_MAXLEN = 32
     SIOCGIWESSID = 0x8B1B
 
-    def __init__(self, interface='wlan0'):
+    def __init__(self, interface='wlan0', interval=2):
+        super().__init__('wifi', interface)
         self.interface = interface
+        self.interval = interval
 
     def essid(self):
         # danger: Python that is written like C :)
@@ -39,15 +42,12 @@ class WifiWidget(base.Widget):
             return essid.decode('utf-8')
         return None
 
-    def output(self):
-        try:
-            essid = self.essid()
-        except:
-            essid = None
+    def run(self):
+        while True:
+            try:
+                essid = self.essid()
+            except:
+                essid = None
 
-        if essid:
-            return {
-                'name': "wifi",
-                'instance': self.interface,
-                'full_text': essid,
-            }
+            self.output['full_text'] = essid
+            time.sleep(self.interval)

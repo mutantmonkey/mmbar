@@ -1,13 +1,30 @@
+import abc
 import datetime
 import os.path
+import threading
 
 
-class Widget(object):
+class Widget(threading.Thread):
+    def __init__(self, name=None, instance=None):
+        self.output = {}
+        self.output['name'] = name
+        self.output['instance'] = instance
+        self.output['full_text'] = None
+
+        super().__init__(name="{}-{}".format(name, instance))
+
+    @abc.abstractmethod
+    def run(self):
+        raise NotImplementedError()
+
     def themed_output(self, config, iconpath):
-        wout = self.output()
+        wout = self.output.copy()
 
         if wout is not None and wout['name'] in config['theme']:
             widget_cfg = config['theme'][wout['name']]
+
+            if wout['full_text'] is None:
+                return None
 
             wout['icon'] = ""
             if 'icon' in widget_cfg:
@@ -42,28 +59,3 @@ class Widget(object):
                     wout['color'] = widget_colors[0]
 
         return wout
-
-
-
-class IntervalWidget(Widget):
-    def __init__(self, interval, retry_interval=30):
-        self.interval = interval
-        self.retry_interval = retry_interval
-        self.last_run = None
-        self.cached_output = None
-
-    def output(self):
-        if not self.last_run or datetime.datetime.now() >= \
-                self.last_run + datetime.timedelta(seconds=self.interval):
-            out = self.get_output()
-            if out is not None:
-                self.cached_output = out
-                self.last_run = datetime.datetime.now()
-            else:
-                self.last_run = datetime.datetime.now() + datetime.timedelta(
-                    seconds=self.retry_interval)
-
-        if self.cached_output is not None:
-            # we need to return a copy, otherwise the icon logic will keep
-            # adding icons
-            return self.cached_output.copy()

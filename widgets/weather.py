@@ -1,31 +1,30 @@
 # -*- coding: utf-8 -*-
+import metar
+import time
 import urllib.error
 import urllib.request
-import metar
 from widgets import base
 
 
-class WeatherWidget(base.IntervalWidget):
+class WeatherWidget(base.Widget):
     uri = "http://weather.noaa.gov/pub/data/observations/metar/stations/"\
           "{icao}.TXT"
 
     def __init__(self, icao_code, interval=300):
+        super().__init__('weather', icao_code)
         self.icao_code = icao_code
-        super().__init__(interval)
+        self.interval = interval
 
-    def get_output(self):
+    def run(self):
         uri = self.uri.format(icao=self.icao_code)
-        try:
-            r = urllib.request.urlopen(uri)
-            w = metar.parse(r.read().decode('utf-8'))
-            text = '{weather}, {temperature}°C'.format(
-                weather=w.conditions or w.cover or "fair",
-                temperature=w.temperature)
+        while True:
+            try:
+                r = urllib.request.urlopen(uri)
+                w = metar.parse(r.read().decode('utf-8'))
+                self.output['full_text'] = '{weather}, {temperature}°C'.format(
+                    weather=w.conditions or w.cover or "fair",
+                    temperature=w.temperature)
+            except:
+                pass
 
-            return {
-                'name': "weather",
-                'instance': self.icao_code,
-                'full_text': text,
-            }
-        except:
-            pass
+            time.sleep(self.interval)

@@ -1,36 +1,24 @@
-import os
+import time
 from widgets import base
 
 
 class BatteryWidget(base.Widget):
-    def __init__(self, device='BAT0'):
+    def __init__(self, device='BAT0', interval=2):
+        super().__init__('battery', device)
         self.device = device
+        self.interval = interval
 
-    def output(self):
-        if os.path.exists('/sys/class/power_supply/{dev}/energy_now'.
-                          format(dev=self.device)):
-            charge_now = int(open('/sys/class/power_supply/{dev}/energy_now'.
-                                  format(dev=self.device)).read())
-            charge_full = int(open('/sys/class/power_supply/{dev}/energy_full'.
-                                   format(dev=self.device)).read())
-        else:
-            charge_now = int(open('/sys/class/power_supply/{dev}/charge_now'.
-                                  format(dev=self.device)).read())
-            charge_full = int(open('/sys/class/power_supply/{dev}/charge_full'.
-                                   format(dev=self.device)).read())
-        charge_percent = int(charge_now / charge_full * 100)
+    def run(self):
+        capacity_path = '/sys/class/power_supply/{dev}/capacity'.format(
+            dev=self.device)
 
-        if charge_percent > 15:
-            return {
-                'name': "battery",
-                'instance': self.device,
-                'full_text': str(charge_percent) + '%',
-                '_status': 'normal',
-            }
-        else:
-            return {
-                'name': "battery",
-                'instance': self.device,
-                'full_text': str(charge_percent) + '%',
-                '_status': 'warn',
-            }
+        while True:
+            charge_percent = int(open(capacity_path).read())
+            self.output['full_text'] = str(charge_percent) + '%' 
+
+            if charge_percent > 15:
+                self.output['_status'] = 'normal'
+            else:
+                self.output['_status'] = 'warn'
+
+            time.sleep(self.interval)
