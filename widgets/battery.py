@@ -3,7 +3,7 @@ from widgets import base
 
 
 class BatteryWidget(base.Widget):
-    def __init__(self, device='BAT0', interval=2):
+    def __init__(self, device='BAT0', interval=6):
         super().__init__('battery', device)
         self.device = device
         self.interval = interval
