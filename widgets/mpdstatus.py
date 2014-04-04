@@ -40,6 +40,25 @@ class MpdStatusWidget(base.Widget):
 
         self.connected = False
 
+    def update_currentsong(self):
+        song = self._client.currentsong()
+        if song:
+            if 'artist' in song and 'title' in song:
+                text = "{artist} - {title}".format(**song)
+            elif 'title' in song:
+                text = song['title']
+            elif 'name' in song:
+                text = song['name']
+            else:
+                text = os.path.basename(song['file'])
+
+            self.output.update({
+                'full_text': text[:100],
+                '_status': 'normal',
+            })
+        else:
+            self.output['full_text'] = None
+
     def run(self):
         while True:
             if not self.connected:
@@ -52,25 +71,9 @@ class MpdStatusWidget(base.Widget):
                     })
 
             try:
-                song = self._client.currentsong()
+                self.update_currentsong()
+                self._client.idle('player')
             except (mpd.MPDError, mpd.ConnectionError, IOError):
                 # disconnect, will attempt again on next refresh
                 self.disconnect()
-                song = None
-
-            if song:
-                if 'artist' in song and 'title' in song:
-                    text = "{artist} - {title}".format(**song)
-                elif 'title' in song:
-                    text = song['title']
-                elif 'name' in song:
-                    text = song['name']
-                else:
-                    text = os.path.basename(song['file'])
-
-                self.output.update({
-                    'full_text': text[:100],
-                    '_status': 'normal',
-                })
-
-            time.sleep(self.interval)
+                time.sleep(self.interval)
