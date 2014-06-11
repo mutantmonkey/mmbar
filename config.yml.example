@@ -1,15 +1,15 @@
 interval: 2
 
 widgets:
-#- widgets.wifi.WifiWidget: wlan0
-#- widgets.battery.BatteryWidget: CMB1
-- widgets.mpdstatus.MpdStatusWidget: gigantea.mutantmonkey.in
-- widgets.weather.WeatherWidget: KSAN
-#- widgets.forecast.ForecastWidget:
+#- wifi.WifiWidget: wlan0
+#- battery.BatteryWidget: CMB1
+- mpdstatus.MpdStatusWidget: gigantea.mutantmonkey.in
+- weather.WeatherWidget: KSAN
+#- forecast.ForecastWidget:
 #    api_key:
 #    lat:
 #    lon:
-- widgets.clock.ClockWidget
+- clock.ClockWidget
 
 theme:
   battery:

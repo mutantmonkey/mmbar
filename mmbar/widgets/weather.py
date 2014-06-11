@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-import metar
 import time
 import urllib.error
 import urllib.request
-from widgets import base
+from mmbar import metar
+from mmbar.widgets import base
 
 
 class WeatherWidget(base.Widget):

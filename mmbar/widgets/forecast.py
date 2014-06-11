@@ -2,7 +2,7 @@
 import json
 import requests
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class ForecastWidget(base.Widget):

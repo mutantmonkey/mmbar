@@ -3,7 +3,7 @@ import fcntl
 import socket
 import struct
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class WifiWidget(base.Widget):

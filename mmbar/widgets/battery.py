@@ -1,5 +1,5 @@
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class BatteryWidget(base.Widget):

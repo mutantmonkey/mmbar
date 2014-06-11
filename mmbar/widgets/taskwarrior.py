@@ -1,6 +1,6 @@
 import subprocess
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class TaskwarriorWidget(base.Widget):

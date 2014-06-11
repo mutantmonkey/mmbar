@@ -11,8 +11,8 @@ import os.path
 import subprocess
 import sys
 import time
-import widgets
 import yaml
+from mmbar import widgets
 
 
 def load_config(configpath):
@@ -64,9 +64,8 @@ def load_widgets(cwidgets):
                 args = []
 
         components = components.split('.')
-        path = '.'.join(components[:-1])
-        module = importlib.import_module(path)
-
+        path = '.' + '.'.join(components[:-1])
+        module = importlib.import_module(path, package='mmbar.widgets')
         class_ = getattr(module, components[-1])
 
         if isinstance(args, dict):

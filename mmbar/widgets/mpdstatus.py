@@ -1,7 +1,7 @@
 import mpd
 import os.path
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class MpdStatusWidget(base.Widget):

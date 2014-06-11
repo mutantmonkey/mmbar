@@ -1,6 +1,6 @@
 import datetime
 import time
-from widgets import base
+from mmbar.widgets import base
 
 
 class ClockWidget(base.Widget):
