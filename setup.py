@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name="mmbar",
-    packages=["mmbar"],
+    packages=["mmbar", "mmbar.widgets"],
     scripts=["mmbar-status"],
-    version="2.0",
+    version="2.1",
     description="Python i3bar status line generator",
     license="ISC",
     author="mutantmonkey",
