@@ -52,6 +52,7 @@ class MpdStatusWidget(base.Widget):
             else:
                 text = os.path.basename(song['file'])
 
+            text = text.replace('&', '&amp;')
             self.output.update({
                 'full_text': text[:100],
                 '_status': 'normal',
