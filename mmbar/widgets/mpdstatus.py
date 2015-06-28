@@ -72,6 +72,8 @@ class MpdStatusWidget(base.Widget):
                         'full_text': str(e),
                         '_status': 'error',
                     })
+                    time.sleep(self.interval)
+                    break
 
             try:
                 self.update_currentsong()
