@@ -43,10 +43,10 @@ class MpdStatusWidget(base.Widget):
     def update_currentsong(self):
         song = self._client.currentsong()
         if song:
-            if type(song['artist']) == list:
-                song['artist'] = ', '.join(song['artist'])
-
             if 'artist' in song and 'title' in song:
+                if type(song['artist']) == list:
+                    song['artist'] = ', '.join(song['artist'])
+
                 text = "{artist} - {title}".format(**song)
             elif 'title' in song:
                 text = song['title']
