@@ -14,6 +14,9 @@ class BatteryWidget(base.Widget):
 
         while True:
             charge_percent = int(open(capacity_path).read())
+            if charge_percent > 100:
+                charge_percent = 100
+
             self.output['full_text'] = str(charge_percent) + '%' 
 
             if charge_percent > 15:
